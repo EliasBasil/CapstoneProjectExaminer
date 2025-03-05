@@ -2,6 +2,7 @@ package org.skypro.examinerservice;
 
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,10 +11,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.examinerservice.model.domain.Question;
 import org.skypro.examinerservice.model.service.JavaQuestionService;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JavaQuestionServiceTest {
@@ -23,6 +23,11 @@ public class JavaQuestionServiceTest {
 
     @InjectMocks
     JavaQuestionService javaQuestionService;
+
+    @BeforeEach
+    public void setUp(){
+        ReflectionTestUtils.setField(javaQuestionService, "random", random);
+    }
 
     @Test
     void whenAddQuestionToEmptyStorage_StorageContainsThisQuestion() {
@@ -58,7 +63,8 @@ public class JavaQuestionServiceTest {
 
     @Test
     void whenRemoveFromEmptyStorage_NothingHappens() {
-        javaQuestionService.remove(new Question("Что есть Java?", "Это язык программирования"));
+        Question question = javaQuestionService.remove(new Question("Что есть Java?", "Это язык программирования"));
+        Assertions.assertNull(question);
         Assertions.assertTrue(javaQuestionService.getAll().isEmpty());
     }
 

@@ -1,7 +1,7 @@
 package org.skypro.examinerservice.model.service;
 
 import org.skypro.examinerservice.model.domain.Question;
-import org.skypro.examinerservice.util.NotEnoughQuestionsInTheStorage;
+import org.skypro.examinerservice.util.WrongQuestionAmountException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -18,7 +18,7 @@ public class ExaminerServiceImpl implements ExaminerService {
     @Override
     public Set<Question> getQuestions(int amount) {
         if (amount > questionService.getAll().size() || amount < 0) {
-            throw new NotEnoughQuestionsInTheStorage();
+            throw new WrongQuestionAmountException();
         } else {
             Set<Question> result = new HashSet<>();
             while (result.size() < amount) {

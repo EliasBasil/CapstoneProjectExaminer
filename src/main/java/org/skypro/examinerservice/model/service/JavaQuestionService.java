@@ -1,7 +1,7 @@
 package org.skypro.examinerservice.model.service;
 
 import org.skypro.examinerservice.model.domain.Question;
-import org.skypro.examinerservice.util.NotEnoughQuestionsInTheStorage;
+import org.skypro.examinerservice.util.WrongQuestionAmountException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,10 +13,6 @@ public class JavaQuestionService implements QuestionService {
 
     public JavaQuestionService() {
         random = new Random();
-    }
-
-    public JavaQuestionService(Random random) {
-        this.random = random;
     }
 
     @Override
@@ -34,23 +30,21 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Question remove(Question question) {
-        questions.remove(question);
-        return question;
+        return questions.remove(question) ? question : null;
     }
 
     @Override
     public Collection<Question> getAll() {
-        return questions;
+        return Collections.unmodifiableSet(questions);
     }
 
     @Override
     public Question getRandomQuestion() {
         if (questions.isEmpty()) {
-            throw new NotEnoughQuestionsInTheStorage();
-        } else {
-            int rand = random.nextInt(questions.size());
-            return new ArrayList<>(questions).get(rand);
+            throw new WrongQuestionAmountException();
         }
+        int rand = random.nextInt(questions.size());
+        return new ArrayList<>(questions).get(rand);
     }
 
     @Override
