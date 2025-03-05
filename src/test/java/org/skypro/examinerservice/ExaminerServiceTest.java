@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.skypro.examinerservice.model.domain.Question;
 import org.skypro.examinerservice.model.service.ExaminerServiceImpl;
 import org.skypro.examinerservice.model.service.JavaQuestionService;
-import org.skypro.examinerservice.util.NotEnoughQuestionsInTheStorage;
+import org.skypro.examinerservice.util.WrongQuestionAmountException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,11 +48,11 @@ public class ExaminerServiceTest {
         Mockito.when(javaQuestionService.getAll())
                 .thenReturn(Set.of(new Question("Что есть Java?", "Это язык программирования"),
                         new Question("Правда ли, что Java - лучший язык?", "Это истина")));
-        Assertions.assertThrows(NotEnoughQuestionsInTheStorage.class, () -> examinerService.getQuestions(5));
+        Assertions.assertThrows(WrongQuestionAmountException.class, () -> examinerService.getQuestions(5));
     }
 
     @Test
     void whenAmountIsNegative_thenThrowsNotEnoughQuestionsInTheStorage() {
-        Assertions.assertThrows(NotEnoughQuestionsInTheStorage.class, () -> examinerService.getQuestions(-1));
+        Assertions.assertThrows(WrongQuestionAmountException.class, () -> examinerService.getQuestions(-1));
     }
 }
